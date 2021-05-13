@@ -1,0 +1,9 @@
+##my files
+bin/
+include/
+Scripts/
+dist/
+build/
+Lib/
+grefornoobs.egg-info/
+pyvenv.cfg
