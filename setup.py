@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="grefornoobs",
-    version="1.0.0",
+    version="1.0.3",
     description="Your python GRE preparation tool",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -20,12 +20,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    packages=["gre"],
-    include_package_data=True,
+    py_modules=["gre"],
+    package_dir={'': 'src'},
     install_requires=[],
-    entry_points={
-        "console_scripts": [
-            "gre=gre.__main__:main",
-        ]
-    },
 )
