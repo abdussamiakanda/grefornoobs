@@ -1,13 +1,21 @@
+import re
+import datetime
+import random
+from datetime import datetime
+from PyDictionary import PyDictionary
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.ticker import MaxNLocator
+
+
+
 def start():
-    
     f = open("progress.txt","a")
     f.writelines(["# Data:False\n"])
     f.close()
-    
+
 
 def hello():
-    import re
-    import datetime
     f = open("progress.txt","r")
 
     lines = f.readlines()
@@ -59,12 +67,15 @@ def meaning():
             c = 1
 
     if c == 0:
-        print("The word doesn't exist in the database. Try adding it as a new word.")
+        print("The word doesn't exist in the database. Here is the meaning from Google Translate:\n")
+        dictionary = PyDictionary(a)
+        print(dictionary.printMeanings())
     
     f.close()
 
 def set():
     a = int(input("Enter the set number: "))
+    print(" ")
 
     f = open("vocabulary.txt","r")
     for line in f:
@@ -77,8 +88,6 @@ def set():
     f.close()
 
 def exam():
-    import random
-    import datetime
     tot = 0
     n = int(input("Enter the number of words you want to try: "))
     print(" ")
@@ -108,15 +117,29 @@ def exam():
     percent = tot/n*100
     print("Total marks: "+str(tot)+"/"+str(n)+" ("+str(percent)+"%)")
 
-    x2 = datetime.datetime.now()
+    x2 = datetime.now()
     x3 = x2.strftime("%d %B %Y")
 
     f1 = open("progress.txt","a")
     f1.writelines(["Mark:",str(x3),":",str(tot),":",str(n),"\n"])
     f1.close()
 
+def flash():
+    s = int(input("Enter the set number: "))
+
+    f = open("vocabulary.txt","r")
+    for line in f:
+        splitLine = line.split(":")
+
+        if int(splitLine[0]) == s:
+            pop = "Word: "+splitLine[1]
+            c = input(pop)
+            print("Meaning:",splitLine[2])
+            
+    f.close()
+
+    
 def progress():
-    from datetime import datetime
     f = open("progress.txt","r")
     lines = f.readlines()
     f.close()
@@ -147,7 +170,31 @@ def progress():
     f5.close()
 
     print("Obtained marks: "+str(M/N*100)+"%\n")
-    print("Total words in vocabulary: "+str(len(lines5)))
+    print("Total words in vocabulary: "+str(len(lines5))+"\n")
+    print("Exam evolution:")
+
+    x = []
+    y = []
+    i = 0
+    
+    f = open("progress.txt","r")
+    for line in f:
+        splitLine = line.split(":")
+
+        if splitLine[0][0] != "#":
+            i += 1
+            x.append(i)
+            y.append(int(splitLine[2])/int(splitLine[3])*100)
+
+    f.close()
+
+    ax = plt.figure(figsize=(10,2)).gca()
+    plt.plot(x,y)
+    plt.ylim(0,105)
+    plt.xlabel("Exams")
+    plt.ylabel("Percentage (%)")
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    plt.show()    
 
 
 
@@ -158,6 +205,7 @@ def help():
     print("new() : adds new word of GRE vocabulary")
     print("meaning() : prints out the meaning of a given word")
     print("set() : prints out all the words in a set")
-    print("exam() : takes a random exam")
+    print("flash() : flashcard of a set")
+    print("exam() : takes a random vocabulary quiz")
     print("progress() : shows data about your preparation progress")
     

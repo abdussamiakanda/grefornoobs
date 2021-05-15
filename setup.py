@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="grefornoobs",
-    version="1.0.3",
+    version="1.0.8",
     description="Your python GRE preparation tool",
     long_description=README,
     long_description_content_type="text/markdown",
