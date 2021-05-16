@@ -6,7 +6,7 @@ from PyDictionary import PyDictionary
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
-
+import requests
 
 
 def start():
@@ -44,6 +44,7 @@ def hello():
 
     f1.close()
 
+    
 def new():
     a = input("Enter the word: ")
     b = input("Enter meaning of the word: ")
@@ -53,6 +54,7 @@ def new():
     f.writelines([c,":",a,":",b,"\n"])
     f.close()
 
+    
 def meaning():
     a = input("Enter the word: ")
     c = 0
@@ -73,6 +75,7 @@ def meaning():
     
     f.close()
 
+    
 def set():
     a = int(input("Enter the set number: "))
     print(" ")
@@ -87,6 +90,7 @@ def set():
     
     f.close()
 
+    
 def exam():
     tot = 0
     n = int(input("Enter the number of words you want to try: "))
@@ -123,6 +127,7 @@ def exam():
     f1 = open("progress.txt","a")
     f1.writelines(["Mark:",str(x3),":",str(tot),":",str(n),"\n"])
     f1.close()
+
 
 def flash():
     s = int(input("Enter the set number: "))
@@ -194,7 +199,24 @@ def progress():
     plt.xlabel("Exams")
     plt.ylabel("Percentage (%)")
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    plt.show()    
+    plt.show()
+
+
+def update():
+    print("Are you sure? This action might remove the words that you added.")
+    ans = input()
+
+    if ans == "y" or ans == "Y" or ans == "Yes" or ans == "yes":
+        url = 'https://drive.google.com/uc?export=download&id=1kLBuhoDUUvrJOuBOLUGff0JYr8dB_nQJ'
+        r = requests.get(url, allow_redirects=True)
+        open('vocabulary.txt', 'wb').write(r.content)
+        print("Files are updated.")
+        
+    elif ans == "n" or ans == "N" or ans == "No" or ans == "no":
+        print("Files are not updated.")
+        
+    else:
+        print("Your answer is not acceptable.")
 
 
 
@@ -208,4 +230,4 @@ def help():
     print("flash() : flashcard of a set")
     print("exam() : takes a random vocabulary quiz")
     print("progress() : shows data about your preparation progress")
-    
+    print("update() : updates database from the internet")
