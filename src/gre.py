@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
 import requests
+from bs4 import BeautifulSoup
 
 
 def start():
@@ -47,33 +48,40 @@ def hello():
     
 def new():
     a = input("Enter the word: ")
-    b = input("Enter meaning of the word: ")
     c = input("Enter the set number: ")
 
     f = open("vocabulary.txt","a")
-    f.writelines([c,":",a,":",b,"\n"])
+    f.writelines([c,":",a,":\n"])
     f.close()
 
     
+def definition(word):
+    URL = 'https://www.vocabulary.com/dictionary/'+word
+    page = requests.get(URL)
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+    pos = [] # parts of speech
+    defin = [] # definitions
+    i = 0
+    
+    for my_tag in soup.find_all(class_="definition"):
+        a = my_tag.text.replace("	","").replace("   ","").replace("\n","")
+        
+        i += 1
+        if i%2 == 1:
+            defin.append(a)
+
+    for my_tag in soup.find_all(class_="pos-icon"):
+        pos.append(my_tag.text.strip().replace("	",""))
+
+    for i in range(len(pos)):
+        print("("+pos[i]+") ")
+        print(defin[i]+"\n")
+    
+
 def meaning():
     a = input("Enter the word: ")
-    c = 0
-
-    f = open("vocabulary.txt","r")
-    for line in f:
-        splitLine = line.split(":")
-
-        if splitLine[1] == a:
-            print("Meaning:",splitLine[2].replace("\n", ""))
-            print("Set:",splitLine[0])
-            c = 1
-
-    if c == 0:
-        print("The word doesn't exist in the database. Here is the meaning from Google Translate:\n")
-        dictionary = PyDictionary(a)
-        print(dictionary.printMeanings())
-    
-    f.close()
+    definition(a)
 
     
 def set():
@@ -86,7 +94,7 @@ def set():
 
         if int(splitLine[0]) == a:
             print("Word:",splitLine[1])
-            print("Meaning:",splitLine[2])
+            definition(splitLine[1])
     
     f.close()
 
@@ -112,7 +120,7 @@ def exam():
             splite = line.split(":")
 
             if splite[1] == xm[i]:
-                print("Meaning: "+splite[2].replace("\n", ""))
+                definition(splitLine[1])
                 mark = int(input("Mark: "))
                 print("\n")
                 tot += mark
@@ -139,7 +147,7 @@ def flash():
         if int(splitLine[0]) == s:
             pop = "Word: "+splitLine[1]
             c = input(pop)
-            print("Meaning:",splitLine[2])
+            definition(splitLine[1])
             
     f.close()
 
@@ -155,51 +163,56 @@ def progress():
     b = datetime.now()
     x = (b - a).days
     print("GRE preparation: "+str(x)+" days")
-    print("Exams taken: "+str(len(lines)-4))
-
-    M = 0
-    N = 0
-
-    f = open("progress.txt","r")
-    for line in f:
-        splitLine = line.split(":")
-
-        if splitLine[0][0] != "#":
-            M += int(splitLine[2])
-            N += int(splitLine[3].replace("\n", ""))
-
-    f.close()
     
     f5 = open("vocabulary.txt","r")
     lines5 = f5.readlines()
     f5.close()
-
-    print("Obtained marks: "+str(M/N*100)+"%\n")
-    print("Total words in vocabulary: "+str(len(lines5))+"\n")
-    print("Exam evolution:")
-
-    x = []
-    y = []
-    i = 0
     
-    f = open("progress.txt","r")
-    for line in f:
-        splitLine = line.split(":")
+    print("Total words in vocabulary: "+str(len(lines5))+"\n")
+    
+    print("Exams taken: "+str(len(lines)-4))
 
-        if splitLine[0][0] != "#":
-            i += 1
-            x.append(i)
-            y.append(int(splitLine[2])/int(splitLine[3])*100)
+    if (len(lines)-4) != 0:
+        
+        M = 0
+        N = 0
 
-    f.close()
+        f = open("progress.txt","r")
+        for line in f:
+            splitLine = line.split(":")
 
-    ax = plt.figure(figsize=(10,2)).gca()
-    plt.plot(x,y)
-    plt.ylim(0,105)
-    plt.xlabel("Exams")
-    plt.ylabel("Percentage (%)")
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    plt.show()
+            if splitLine[0][0] != "#":
+                M += int(splitLine[2])
+                N += int(splitLine[3].replace("\n", ""))
+
+        f.close()
+
+
+        print("Obtained marks: "+str(M/N*100)+"%\n")
+        print("Exam evolution:")
+
+        x = []
+        y = []
+        i = 0
+
+        f = open("progress.txt","r")
+        for line in f:
+            splitLine = line.split(":")
+
+            if splitLine[0][0] != "#":
+                i += 1
+                x.append(i)
+                y.append(int(splitLine[2])/int(splitLine[3])*100)
+
+        f.close()
+
+        ax = plt.figure(figsize=(10,2)).gca()
+        plt.plot(x,y)
+        plt.ylim(0,105)
+        plt.xlabel("Exams")
+        plt.ylabel("Percentage (%)")
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.show()
 
 
 def update():
@@ -231,3 +244,5 @@ def help():
     print("exam() : takes a random vocabulary quiz")
     print("progress() : shows data about your preparation progress")
     print("update() : updates database from the internet")
+    
+    

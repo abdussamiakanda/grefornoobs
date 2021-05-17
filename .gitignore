@@ -7,3 +7,4 @@ build/
 Lib/
 grefornoobs.egg-info/
 pyvenv.cfg
+__pycache__/
