@@ -8,6 +8,7 @@ GRE for Noobs is a python library that helps you with your GRE preparation. It h
 - Import the library `import gre`
 - Start building necessary database `gre.start()`
 - Start recording your progress `gre.hello()`
+- GRE basic informations `gre.about()`
 - Add new words in your vocabulary file `gre.new()`
 - Find meaning of a word `gre.meaning()`
 - View all words in a set `gre.set()`

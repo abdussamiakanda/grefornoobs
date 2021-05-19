@@ -2,7 +2,6 @@ import re
 import datetime
 import random
 from datetime import datetime
-from PyDictionary import PyDictionary
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
@@ -14,6 +13,13 @@ def start():
     f = open("progress.txt","a")
     f.writelines(["# Data:False\n"])
     f.close()
+    
+    url = 'https://drive.google.com/uc?export=download&id=1kLBuhoDUUvrJOuBOLUGff0JYr8dB_nQJ'
+    r = requests.get(url, allow_redirects=True)
+    open('vocabulary.txt', 'wb').write(r.content)
+    
+    print("Welcome to your python GRE preparation tool. Necessary files are created.")
+    print("To learn more about GRE use 'gre.about()', and to learn more about this library use 'gre.help()'.")
 
 
 def hello():
@@ -46,6 +52,71 @@ def hello():
     f1.close()
 
     
+def about():
+    print("GRE = Graduate Record Examination")
+    print(" ")
+    print("# Skills that are evaluated:")
+    print("  > Verbal reasoning")
+    print("     - Vocabulary")
+    print("     - Comprehension")
+    print("  > Quantitative reasoning")
+    print("     - Counting")
+    print("     - Mathematical logic")
+    print("  > Analytical writing")
+    print("     - Critical analysis")
+    print("     - Presentation of logic")
+    print(" ")
+    print("# Who sits for GRE?")
+    print("  > For graduates")
+    print("  > Possible to sit for it while in undergraduation")
+    print("  > Used for postgraduate degrees")
+    print(" ")
+    print("# Why take GRE?")
+    print("  > For higher education in North America")
+    print("  > Common standard to measure capabilities of students from all over the world")
+    print("  > Many programs require GRE as a criteria")
+    print(" ")
+    print("# Sections and Marks:")
+    print("  > Verbal reasoning")
+    print("     - 2 sections")
+    print("     - 20 questions per section")
+    print("     - 30 minutes per section")
+    print("     - Score between 130-170")
+    print("  > Quantitative reasoning")
+    print("     - 2 sections")
+    print("     - 20 questions per section")
+    print("     - 35 minutes per section")
+    print("     - Score between 130-170")
+    print("  > Analytical writing")
+    print("     - 2 tasks i.e., essays (Issue task and Argument task)")
+    print("     - 30 minutes per essay")
+    print("     - Score between 0-6")
+    print(" ")
+    print("# Test progression:")
+    print("  > Issue task (30 mins)")
+    print("  > Argument task (30 mins)")
+    print("  > Verbal reasoning (30 mins)")
+    print("  > Quantitative reasoning (35 mins)")
+    print("  > Break (10 mins)")
+    print("  > Verbal reasoning (30 mins)")
+    print("  > Quantitative reasoning (35 mins)")
+    print("  > Verbal/Quantitative reasoning (30/35 mins)")
+    print("Either section which will have 3 sections, 1 section of it will not be counted.")
+    print(" ")
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 def new():
     a = input("Enter the word: ")
     c = input("Enter the set number: ")
@@ -65,7 +136,7 @@ def definition(word):
     i = 0
     
     for my_tag in soup.find_all(class_="definition"):
-        a = my_tag.text.replace("	","").replace("   ","").replace("\n","")
+        a = my_tag.text.replace("	","").replace("     ","").replace("\n","")
         
         i += 1
         if i%2 == 1:
@@ -216,7 +287,9 @@ def progress():
 
 
 def update():
-    print("Are you sure? This action might remove the words that you added.")
+    print("Are you sure? (y/n)")
+    print("This action will update the words to GregMAT vocabularies.")
+
     ans = input()
 
     if ans == "y" or ans == "Y" or ans == "Yes" or ans == "yes":
@@ -237,6 +310,7 @@ def update():
 def help():
     print("start() : builds necessary database for the package")
     print("hello() : gets you started with the package")
+    print("about() : GRE basic informations")
     print("new() : adds new word of GRE vocabulary")
     print("meaning() : prints out the meaning of a given word")
     print("set() : prints out all the words in a set")
